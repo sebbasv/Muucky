@@ -1,6 +1,8 @@
 // Configuración de la tienda. Todo lo marcado [CONFIRMAR] es un dato que tiene que pasar el cliente:
 // los valores actuales son de ejemplo para la demo de propuesta.
 
+import { basePath } from '@/lib/base-path';
+
 export type ShippingZoneId = 'caba' | 'gba' | 'interior';
 
 export type ShippingZone = {
@@ -52,8 +54,8 @@ export const store = {
    * desktop: 16:9 (pantallas horizontales de 768 px o más); mobile: 9:16 (el resto, tablets en vertical incluidas).
    */
   hero: {
-    desktop: { path: '/hero/v1/desktop', frames: 150, stops: [0, 0.22, 0.385, 0.6, 0.8, 1] },
-    mobile: { path: '/hero/v1/mobile', frames: 90, stops: [0, 0.25, 0.41, 0.6, 0.8, 1] },
+    desktop: { path: `${basePath}/hero/v1/desktop`, frames: 150, stops: [0, 0.22, 0.385, 0.6, 0.8, 1] },
+    mobile: { path: `${basePath}/hero/v1/mobile`, frames: 90, stops: [0, 0.25, 0.41, 0.6, 0.8, 1] },
   },
 
   /** Reseñas: true solo con reseñas reales y con permiso para usarlas. */
