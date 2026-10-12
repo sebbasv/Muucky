@@ -1,0 +1,339 @@
+@import "tailwindcss";
+
+/* Pantalla horizontal de 768 px o más: el hero usa el video 16:9 y el layout con el texto a la izquierda.
+   Una tablet en vertical usa el video 9:16 y el texto abajo, como el celular. */
+@custom-variant wide (@media (min-width: 768px) and (orientation: landscape));
+
+/* Tokens de marca Muucky (tokens.json del sistema de diseño). Los colores no se tocan. */
+:root {
+  --black: #080808;
+  --black-soft: #0d0d0d;
+  --surface: #121212;
+  --surface-raised: #141414;
+  --surface-muted: #1f1f1f;
+  --border: #242424;
+  --ink: #f2f2f2;
+  --ink-muted: #8c8c8c;
+  --white: #ffffff;
+  --red: #d41111;
+  --red-dark: #981b1b;
+  --red-deep: #a50d0d;
+  --red-bright: #ec1313;
+  --ember: #cf4517;
+  --red-text: #ef4343;
+  /* red-text sobre leather da 4.33:1; este tono pasa AA (5.4:1) para texto chico en esa banda */
+  --red-text-on-leather: #f46666;
+  --leather: #231f1a;
+  --glow-red: 0 0 30px #d4111133, 0 0 60px #d411111a;
+  --glow-red-strong: 0 0 40px #d4111159, 0 0 80px #d4111126;
+  --pack-drop: 0 20px 60px rgba(180, 30, 30, 0.3);
+  --gradient-cta: linear-gradient(135deg, var(--red-deep), var(--red-bright), var(--ember));
+  --header-h: 72px;
+  --bar-h: 36px;
+  color-scheme: dark;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-h: 80px;
+  }
+}
+
+/* Barra de anuncios cerrada (lo recuerda localStorage) */
+html[data-bar-closed="true"] {
+  --bar-h: 0px;
+}
+html[data-bar-closed="true"] .announcement {
+  display: none;
+}
+
+/* Con el menú mobile abierto no queda nada flotando encima (WhatsApp, barra de compra) */
+html[data-menu-open="true"] .floating-ui {
+  display: none;
+}
+
+@keyframes barIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@theme inline {
+  --color-black: var(--black);
+  --color-black-soft: var(--black-soft);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-white: var(--white);
+  --color-red: var(--red);
+  --color-red-dark: var(--red-dark);
+  --color-red-deep: var(--red-deep);
+  --color-red-bright: var(--red-bright);
+  --color-ember: var(--ember);
+  --color-red-text: var(--red-text);
+  --color-red-text-on-leather: var(--red-text-on-leather);
+  --color-leather: var(--leather);
+
+  --font-display: var(--font-oswald), Impact, "Arial Narrow", sans-serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Escala tipográfica: 8 pasos de texto (12 a 64) y 2 de display (96 y 128). Clases text-12 … text-128;
+     no usar tamaños sueltos (text-[15px]). */
+  --text-12: 12px;
+  --text-12--line-height: 16px;
+  --text-14: 14px;
+  --text-14--line-height: 20px;
+  --text-16: 16px;
+  --text-16--line-height: 24px;
+  --text-18: 18px;
+  --text-18--line-height: 28px;
+  --text-24: 24px;
+  --text-24--line-height: 1.2;
+  --text-32: 32px;
+  --text-32--line-height: 1.1;
+  --text-48: 48px;
+  --text-48--line-height: 1;
+  --text-64: 64px;
+  --text-64--line-height: 1;
+  --text-96: 96px;
+  --text-96--line-height: 0.92;
+  --text-128: 128px;
+  --text-128--line-height: 0.9;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+
+  --shadow-glow: var(--glow-red);
+  --shadow-glow-strong: var(--glow-red-strong);
+}
+
+html {
+  background: var(--black);
+  scroll-padding-top: calc(var(--bar-h) + var(--header-h) + 16px);
+}
+
+body {
+  background: var(--black);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--red);
+  color: var(--white);
+}
+
+/* Foco visible: anillo red-text de 2 px */
+:focus-visible {
+  outline: 2px solid var(--red-text);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 1152px;
+    margin-inline: auto;
+    padding-inline: 16px;
+  }
+  @media (min-width: 768px) {
+    .container-x {
+      padding-inline: 24px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .container-x {
+      padding-inline: 0;
+    }
+  }
+
+  .section-y {
+    padding-block: 64px;
+  }
+  @media (min-width: 768px) {
+    .section-y {
+      padding-block: 96px;
+    }
+  }
+
+  .eyebrow {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-14);
+    line-height: 20px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red-text);
+  }
+
+  .h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-32);
+    line-height: 1.05;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+  @media (min-width: 768px) {
+    .h2 {
+      font-size: var(--text-64);
+      line-height: 1;
+    }
+  }
+
+  /* Texto largo de páginas informativas y legales */
+  .prose-muucky {
+    color: var(--ink);
+    font-size: var(--text-16);
+    line-height: 1.7;
+    max-width: 68ch;
+  }
+  .prose-muucky h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-24);
+    line-height: 1.15;
+    margin: 48px 0 12px;
+  }
+  .prose-muucky h3 {
+    font-weight: 700;
+    font-size: var(--text-18);
+    margin: 28px 0 8px;
+  }
+  .prose-muucky p,
+  .prose-muucky ul,
+  .prose-muucky ol {
+    margin: 0 0 16px;
+    color: #cfcfcf;
+  }
+  .prose-muucky ul {
+    list-style: none;
+    padding: 0;
+  }
+  .prose-muucky ul li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 8px;
+  }
+  .prose-muucky ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.75em;
+    width: 10px;
+    height: 2px;
+    background: var(--red);
+    transform: skewX(-20deg);
+  }
+  .prose-muucky a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--red);
+    text-underline-offset: 3px;
+  }
+  .prose-muucky strong {
+    color: var(--ink);
+  }
+}
+
+/* Tiras: el motivo gráfico de la marca (carne cortada en tiras), recortado en diagonal */
+.strips {
+  background-image: repeating-linear-gradient(
+    105deg,
+    transparent 0 22px,
+    var(--black) 22px 30px
+  );
+}
+
+/* Entradas cortas, solo si el usuario no pidió menos movimiento */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 400ms ease-out,
+      transform 400ms ease-out;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hero: modo estático (reduced motion, ahorro de datos o sin JS) y modo scroll (pin con position: sticky) */
+.hero[data-mode="static"] .hero-step,
+.hero[data-mode="static"] .hero-canvas,
+.hero[data-mode="static"] .hero-hint,
+.hero[data-mode="static"] .hero-poster {
+  display: none;
+}
+.hero[data-mode="scroll"] {
+  height: 200svh; /* 100svh de recorrido en mobile: no más de dos pantallas antes de los productos */
+}
+.hero[data-mode="scroll"] .hero-stage {
+  position: sticky;
+  top: 0;
+}
+.hero[data-mode="scroll"] .hero-static-only {
+  display: none;
+}
+.hero[data-mode="scroll"] .hero-rail {
+  display: block;
+}
+.hero[data-mode="scroll"] .hero-pack {
+  opacity: 0;
+}
+.hero[data-mode="scroll"] .hero-step {
+  opacity: 0;
+  visibility: hidden;
+}
+/* "Cómo se hace" cae en la etapa 01 (20 % del recorrido), debajo del header fijo */
+.hero[data-mode="scroll"] .hero-anchor {
+  position: absolute;
+  top: calc(20svh + var(--bar-h) + var(--header-h) + 16px);
+}
+/* Con video, el frame 1 hace de póster hasta que el canvas dibuja (solo se descarga en modo scroll) */
+.hero-poster {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.hero[data-mode="scroll"] .hero-poster {
+  background-image: var(--hero-poster-mobile);
+}
+.hero[data-sequence="true"] .hero-pack {
+  display: none;
+}
+@media (min-width: 768px) and (orientation: landscape) {
+  .hero[data-mode="scroll"] {
+    height: 400svh; /* 300svh de recorrido en desktop */
+  }
+  .hero[data-mode="scroll"] .hero-anchor {
+    top: calc(60svh + var(--bar-h) + var(--header-h) + 16px);
+  }
+  .hero[data-mode="scroll"] .hero-poster {
+    background-image: var(--hero-poster-desktop);
+  }
+}
+
+/* Ocultar la barra de scroll en carruseles con snap */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
